@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duncan's Just-In-Time Donuts</title>
+    <link rel="stylesheet" type="text/css" href="donuts.css" />
+  </head>
+
+  <body>
+    <div id="frame">
+      
+      <div class="heading">Duncan's Just-In-Time Donuts</div>
+      <div class="subheading">All donuts 50 cents each, cake or glazed!</div>
+      <div id="left">
+        <img src="donuttime.png" alt="Just-In-Time Donuts" />
+      </div>
+      <form name="orderform" action="donuts.php" method="POST">
+        <div class="field">
+          Name: <input type="text" id="name" name="name" value="" />
+        </div>
+        <div class="field">
+        # of cake donuts: <input type="text" id="cakedonuts" name="cakedonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+
+        # of glazed donuts: <input type="text" id="glazeddonuts" name="glazeddonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+        Minutes 'til pickup: <input type="text" id="pickupminutes" name="pickupminutes" value="" />
+        </div>
+        <div class="field">
+        Subtotal: <input type="text" id="subtotal" name="subtotal" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Tax: <input type="text" id="tax" name="tax" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Total: <input type="text" id="total" name="total" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        <input type="button" value="Place Order" onclick="placeOrder(this.form);" />
+        </div>
+      </form>
+    </div>
+
+    <script type="text/javascript">
+        
+        function updateOrder() {
+
+            const TAXRATE = 0.0925;
+            const DONUTPRICE = 0.50;
+
+            var cakeDonuts = document.getElementById('cakedonuts');
+            var glazedDonuts = document.getElementById('glazeddonuts');
+
+            // parseInt()함수에 문자형 숫자가 아닌 문자 혹은 공백이 들어가면? NaN을 반환한다.
+            var numCakeDonuts = parseInt(cakeDonuts.value);
+            var numGlazedDonuts = parseInt(glazedDonuts.value);
+
+            // test
+            console.log(numCakeDonuts);
+            console.log(numGlazedDonuts);
+
+            if (isNaN(numCakeDonuts)) numCakeDonuts = 0;
+            if (isNaN(numGlazedDonuts)) numGlazedDonuts = 0;
+
+            var subTotal = (numCakeDonuts + numGlazedDonuts)*DONUTPRICE;
+            var tax = subTotal*TAXRATE;
+            var total = subTotal + tax;
+
+            var subTotalElement = document.getElementById('subtotal');
+            subTotalElement.value = "$" + subTotal.toFixed(2);
+            var taxElement = document.getElementById('tax');
+            taxElement.value = "$" + tax.toFixed(2);
+            var totalElement = document.getElementById('total');
+            totalElement.value = "$" + total.toFixed(2);
+
+            //test
+            console.log("================================");
+            console.log("numCakeDonuts : " + numCakeDonuts);
+            console.log("numGlazedDonuts : " + numGlazedDonuts);
+            console.log("subTotal : " + subTotal);
+            console.log("tax : " + tax);
+            console.log("total : " + total);
+
+            console.log("================================");
+            console.log("isNaN(numCakeDonuts) : " + isNaN(numCakeDonuts));
+            console.log("isNaN(numGlazedDonuts) : " + isNaN(numGlazedDonuts));
+
+        };     
+    </script>    
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duncan's Just-In-Time Donuts</title>
+    <link rel="stylesheet" type="text/css" href="donuts.css" />
+  </head>
+
+  <body>
+    <div id="frame">
+      
+      <div class="heading">Duncan's Just-In-Time Donuts</div>
+      <div class="subheading">All donuts 50 cents each, cake or glazed!</div>
+      <div id="left">
+        <img src="donuttime.png" alt="Just-In-Time Donuts" />
+      </div>
+      <form name="orderform" action="donuts.php" method="POST">
+        <div class="field">
+          Name: <input type="text" id="name" name="name" value="" />
+        </div>
+        <div class="field">
+        # of cake donuts: <input type="text" id="cakedonuts" name="cakedonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+
+        # of glazed donuts: <input type="text" id="glazeddonuts" name="glazeddonuts" value=""
+          onchange="updateOrder();" />
+        </div>
+        <div class="field">
+        Minutes 'til pickup: <input type="text" id="pickupminutes" name="pickupminutes" value="" />
+        </div>
+        <div class="field">
+        Subtotal: <input type="text" id="subtotal" name="subtotal" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Tax: <input type="text" id="tax" name="tax" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        Total: <input type="text" id="total" name="total" value="" readonly="readonly" />
+        </div>
+        <div class="field">
+        <input type="button" value="Place Order" onclick="placeOrder(this.form);" />
+        </div>
+      </form>
+    </div>
+
+    <script type="text/javascript">
+        
+        function updateOrder() {
+
+            const TAXRATE = 0.0925;
+            const DONUTPRICE = 0.50;
+
+            var cakeDonuts = document.getElementById('cakedonuts');
+            var glazedDonuts = document.getElementById('glazeddonuts');
+
+            // parseInt()함수에 문자형 숫자가 아닌 문자 혹은 공백이 들어가면? NaN을 반환한다.
+            var numCakeDonuts = parseDonuts(cakeDonuts.value);
+            var numGlazedDonuts = parseDonuts(glazedDonuts.value);
+
+            // test
+            console.log(numCakeDonuts);
+            console.log(numGlazedDonuts);
+
+            if (isNaN(numCakeDonuts)) numCakeDonuts = 0;
+            if (isNaN(numGlazedDonuts)) numGlazedDonuts = 0;
+
+            var subTotal = (numCakeDonuts + numGlazedDonuts)*DONUTPRICE;
+            var tax = subTotal*TAXRATE;
+            var total = subTotal + tax;
+
+            var subTotalElement = document.getElementById('subtotal');
+            subTotalElement.value = "$" + subTotal.toFixed(2);
+            var taxElement = document.getElementById('tax');
+            taxElement.value = "$" + tax.toFixed(2);
+            var totalElement = document.getElementById('total');
+            totalElement.value = "$" + total.toFixed(2);
+
+
+            //test
+            console.log("================================");
+            console.log("numCakeDonuts : " + numCakeDonuts);
+            console.log("numGlazedDonuts : " + numGlazedDonuts);
+            console.log("subTotal : " + subTotal);
+            console.log("tax : " + tax);
+            console.log("total : " + total);
+        }
+
+        function placeOrder() {
+          // 이름 입력난에 입력값이 없다면
+          if(document.getElementById('name').value == "") {
+            alert("I'm sorry but you must provide your name before submitting an order.");
+          
+          // 픽업시간 입력값이 없다(비어 있거나)거나 입력값(시간)이 NaN(문자형 숫자가 아니라면)이라면
+          } else if(document.getElementById("pickupminutes").value == "" ||
+          isNaN(document.getElementById("pickupminutes").value)) {
+            alert("I'm sorry but you must provide the number of minutes until pick-up before submitting an order.");
+          
+          // if, else if 를 모두 통과한 경우 즉, if, else if가 모두 false일 경우 함수 호출
+          } else {
+            formSubmit();
+          }
+        }
+
+        function parseDonuts(donutString) {
+          numDonuts = parseInt(donutString);
+
+          // string.indexOf(searchvalue, position)
+          // indexOf 함수는 문자열(string)에서 특정 문자열(searchvalue)을 찾고, 검색된 문자열이 '첫번째'로 나타나는 위치 index를 리턴한다.
+          // 파라미터: searchvalue: 필수 입력값, 찾을 문자열 | position: optional, 기분값은 0, string에서 searchvalue를 찾기 시작할 위치
+          // 찾는 문자열이 없으면 -1을 리턴한다. 문자열을 찾을 때 대소문자를 구분한다
+          if (donutString.indexOf("dozen") != -1) numDonuts *= 12;
+          return numDonuts;
+        }
+
+        function formSubmit() {
+          var num = Math.floor(Math.random()*10000);
+          var name = orderform.name.value;
+          var minutes = orderform.pickupminutes.value;
+          var total = orderform.total.value;
+          console.log("========= An Order Sheet =========");
+          console.log("== Duncan's Just-In-Time Donuts");
+          console.log("== Order Confirmation");
+          console.log("== Order #" + num);
+          console.log("== Customer name: " + name);
+          console.log("== Ready in: " + minutes + " minutes");
+          console.log("== Total: " + total);
+          console.log("==================================");
+        }           
+    </script>    
+  </body>
+</html>
